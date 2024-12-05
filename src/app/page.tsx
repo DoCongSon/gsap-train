@@ -3,9 +3,6 @@ import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
 
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-// import DrawSVGPlugin from 'gsap-trial/DrawSVGPlugin'
-
-// gsap.registerPlugin(useGSAP, ScrollTrigger, DrawSVGPlugin)
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 export default function Home() {
@@ -86,7 +83,7 @@ export default function Home() {
     const tl = gsap.timeline({
       paused: true,
     })
-    tl.fromTo('.progress', { drawSVG: '0%', visibility: 'visible' }, { drawSVG: '100%', ease: 'none' })
+    tl.fromTo('.progress', { strokeDashoffset: 1488.36 }, { strokeDashoffset: 0 })
 
     ScrollTrigger.create({
       trigger: '.gsap-content-container',
@@ -107,19 +104,32 @@ export default function Home() {
           <div className='flex item-center mt-[20rem] absolute left-0 gsap-year-container pr-[8.25rem]'>
             <div className='w-[30.875rem] h-[30.875rem] rounded-full absolute -top-[6rem] left-[10rem]'>
               <svg
+                width='494'
+                height='494'
+                viewBox='-61.75 -61.75 617.5 617.5'
+                version='1.1'
                 xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 494 494'
-                className='w-full h-full transform -rotate-90 translate-x-[0.5px] translate-y-[0.5px]'>
-                <circle cx='247' cy='247' r='243' fill='none' stroke='#376A66' strokeWidth={1} />
+                className='transform -rotate-90'>
                 <circle
+                  r='237'
                   cx='247'
                   cy='247'
-                  r='243'
-                  fill='none'
-                  stroke='#4CA757'
-                  strokeWidth={4}
-                  className='invisible progress'
-                />
+                  fill='transparent'
+                  stroke='#376a66'
+                  stroke-width='1'
+                  stroke-dasharray='1488.36px'
+                  stroke-dashoffset='0'></circle>
+                <circle
+                  r='237'
+                  cx='247'
+                  cy='247'
+                  stroke='#4ca757'
+                  stroke-width='4'
+                  stroke-linecap='round'
+                  stroke-dashoffset='878px'
+                  fill='transparent'
+                  className='progress'
+                  stroke-dasharray='1488.36px'></circle>
               </svg>
             </div>
             <div className='items-start text-[15rem] font-extrabold leading-[1.2] text-[#F2F2F3] flex relative'>
