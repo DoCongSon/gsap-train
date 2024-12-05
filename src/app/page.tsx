@@ -3,9 +3,10 @@ import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
 
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import DrawSVGPlugin from 'gsap-trial/DrawSVGPlugin'
+// import DrawSVGPlugin from 'gsap-trial/DrawSVGPlugin'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger, DrawSVGPlugin)
+// gsap.registerPlugin(useGSAP, ScrollTrigger, DrawSVGPlugin)
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 export default function Home() {
   useGSAP(() => {
