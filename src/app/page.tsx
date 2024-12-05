@@ -1,101 +1,372 @@
-import Image from "next/image";
+'use client'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
+
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import DrawSVGPlugin from 'gsap-trial/DrawSVGPlugin'
+
+gsap.registerPlugin(useGSAP, ScrollTrigger, DrawSVGPlugin)
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  useGSAP(() => {
+    gsap.to('.gsap-year-container', {
+      scrollTrigger: {
+        trigger: '.gsap-year-container',
+        endTrigger: '.gsap-content-container',
+        start: '-=320 top',
+        end: 'bottom bottom',
+        pin: true,
+        scrub: true,
+      },
+    })
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    const gsapYearTrigger = gsap.utils.toArray('.gsap-year-trigger') as HTMLElement[]
+    const gsapYear = gsap.utils.toArray('.gsap-year') as HTMLElement[]
+    gsapYearTrigger.forEach((year, index) => {
+      gsap.to(year, {
+        scrollTrigger: {
+          trigger: year,
+          start: 'top center',
+          end: 'bottom center',
+          onToggle: ({ isActive }) => {
+            if (isActive) {
+              gsap.to('.gsap-year-wrap', { duration: 1, y: (-100 / gsapYearTrigger.length) * index + '%' })
+              gsapYear[index].classList.add(
+                'bg-clip-text',
+                'text-transparent',
+                'bg-gradient-to-b',
+                'from-[#4CA757]',
+                'to-[#16A571]'
+              )
+            } else {
+              gsapYear[index].classList.remove(
+                'bg-clip-text',
+                'text-transparent',
+                'bg-gradient-to-b',
+                'from-[#4CA757]',
+                'to-[#16A571]'
+              )
+            }
+          },
+        },
+      })
+    })
+
+    const gsapContent = gsap.utils.toArray('.gsap-content-item') as HTMLElement[]
+    gsapContent.forEach((content) => {
+      gsap.to(content, {
+        scrollTrigger: {
+          trigger: content,
+          start: 'top center',
+          end: 'bottom center',
+          onToggle: ({ isActive }) => {
+            if (isActive) {
+              content.classList.add(
+                '[&>h2]:bg-clip-text',
+                '[&>h2]:text-transparent',
+                '[&>h2]:bg-gradient-to-b',
+                '[&>h2]:from-[#4CA757]',
+                '[&>h2]:to-[#16A571]'
+              )
+            } else {
+              content.classList.remove(
+                '[&>h2]:bg-clip-text',
+                '[&>h2]:text-transparent',
+                '[&>h2]:bg-gradient-to-b',
+                '[&>h2]:from-[#4CA757]',
+                '[&>h2]:to-[#16A571]'
+              )
+            }
+          },
+        },
+      })
+    })
+
+    const tl = gsap.timeline({
+      paused: true,
+    })
+    tl.fromTo('.progress', { drawSVG: '0%', visibility: 'visible' }, { drawSVG: '100%', ease: 'none' })
+
+    ScrollTrigger.create({
+      trigger: '.gsap-content-container',
+      start: 'top bottom',
+      end: 'bottom bottom',
+      animation: tl,
+      scrub: true,
+    })
+  })
+
+  return (
+    <>
+      <div className='w-full h-screen' />
+      <div className='w-full max-w-screen-3xl mx-auto px-[4.38rem]'>
+        <h2 className='text-lg font-extrabold leading-normal uppercase text-xam'>OIE Projects - Annual HSEQ Summary</h2>
+        <div className='mt-[0.875rem] w-full h-[1px] bg-vien' />
+        <div className='pl-[50rem] relative'>
+          <div className='flex item-center mt-[20rem] absolute left-0 gsap-year-container pr-[8.25rem]'>
+            <div className='w-[30.875rem] h-[30.875rem] rounded-full absolute -top-[6rem] left-[10rem]'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 494 494'
+                className='w-full h-full transform -rotate-90 translate-x-[0.5px] translate-y-[0.5px]'>
+                <circle cx='247' cy='247' r='243' fill='none' stroke='#376A66' strokeWidth={1} />
+                <circle
+                  cx='247'
+                  cy='247'
+                  r='243'
+                  fill='none'
+                  stroke='#4CA757'
+                  strokeWidth={4}
+                  className='invisible progress'
+                />
+              </svg>
+            </div>
+            <div className='items-start text-[15rem] font-extrabold leading-[1.2] text-[#F2F2F3] flex relative'>
+              <p>20</p>
+              <div className='gsap-year-wrap'>
+                <p className='gsap-year'>21</p>
+                <p className='gsap-year'>22</p>
+                <p className='gsap-year'>23</p>
+              </div>
+            </div>
+          </div>
+          <div className='gsap-content-container'>
+            <div className='gsap-year-trigger'>
+              <div className='pt-12 gsap-content-item'>
+                <h3 className='text-lg font-black text-subTitle'>2021</h3>
+                <h2 className='mt-4 text-[2rem] leading-snug font-extrabold text-xam'>
+                  OIE Construction Projects - HSEQ Yearly Snapshot 2021
+                </h2>
+                <p className='mt-2 text-lg text-text'>
+                  Lorem ipsum dolor sit amet consectetur. Amet rhoncus a morbi scelerisque sed praesent tempor.{' '}
+                </p>
+                <div className='mt-8 w-full h-[1px] bg-vien' />
+                <h4 className='mt-10 text-[2rem] leading-snug bg-clip-text font-extrabold text-xam'>
+                  Welcome to OIE&apos;s brief annual summary of our Health, Safety, Environment, and Quality (HSEQ)
+                  performance for the year 2023.
+                </h4>
+                <div className='flex flex-col gap-4 mt-6 [&>p]:text-lg [&>p]:text-text [&>p>b]:text-xl [&>p>b]:font-extrabold'>
+                  <p>
+                    <b>Health:</b> Incident Rate: 3 incidents per 100 full-time employeesSick Days: 1.8% of total
+                    working days
+                  </p>
+                  <p>
+                    <b>Safety:</b> Total Recordable Incident Rate: 4.5 per 100 full-time employees. Safety Compliance
+                    Rate: 97%
+                  </p>
+                  <p>
+                    <b>Quality:</b> Customer Satisfaction: 92% satisfaction rateProject Delivery: 90% on-time and
+                    on-budget Highlights
+                  </p>
+                  <p>
+                    Obtained ISO 14001 Environmental Management Certification.Launched new safety training
+                    program.Completed the XYZ project ahead of schedule and under budget.As we move into 2024, we stay
+                    committed to excellence in health, safety, environmental sustainability, and quality in our
+                    construction projects. Thank you for your support.
+                  </p>
+                </div>
+              </div>
+              <div className='pt-12 gsap-content-item'>
+                <h3 className='text-lg font-black text-subTitle'>2021</h3>
+                <h2 className='mt-4 text-[2rem] leading-snug font-extrabold text-xam'>
+                  OIE Construction Projects - HSEQ Yearly Snapshot 2021
+                </h2>
+                <p className='mt-2 text-lg text-text'>
+                  Lorem ipsum dolor sit amet consectetur. Amet rhoncus a morbi scelerisque sed praesent tempor.{' '}
+                </p>
+                <div className='mt-8 w-full h-[1px] bg-vien' />
+                <h4 className='mt-10 text-[2rem] leading-snug bg-clip-text font-extrabold text-xam'>
+                  Welcome to OIE&apos;s brief annual summary of our Health, Safety, Environment, and Quality (HSEQ)
+                  performance for the year 2023.
+                </h4>
+                <div className='flex flex-col gap-4 mt-6 [&>p]:text-lg [&>p]:text-text [&>p>b]:text-xl [&>p>b]:font-extrabold'>
+                  <p>
+                    <b>Health:</b> Incident Rate: 3 incidents per 100 full-time employeesSick Days: 1.8% of total
+                    working days
+                  </p>
+                  <p>
+                    <b>Safety:</b> Total Recordable Incident Rate: 4.5 per 100 full-time employees. Safety Compliance
+                    Rate: 97%
+                  </p>
+                  <p>
+                    <b>Quality:</b> Customer Satisfaction: 92% satisfaction rateProject Delivery: 90% on-time and
+                    on-budget Highlights
+                  </p>
+                  <p>
+                    Obtained ISO 14001 Environmental Management Certification.Launched new safety training
+                    program.Completed the XYZ project ahead of schedule and under budget.As we move into 2024, we stay
+                    committed to excellence in health, safety, environmental sustainability, and quality in our
+                    construction projects. Thank you for your support.
+                  </p>
+                </div>
+              </div>
+              <div className='pt-12 gsap-content-item'>
+                <h3 className='text-lg font-black text-subTitle'>2021</h3>
+                <h2 className='mt-4 text-[2rem] leading-snug font-extrabold text-xam'>
+                  OIE Construction Projects - HSEQ Yearly Snapshot 2021
+                </h2>
+                <p className='mt-2 text-lg text-text'>
+                  Lorem ipsum dolor sit amet consectetur. Amet rhoncus a morbi scelerisque sed praesent tempor.{' '}
+                </p>
+                <div className='mt-8 w-full h-[1px] bg-vien' />
+                <h4 className='mt-10 text-[2rem] leading-snug bg-clip-text font-extrabold text-xam'>
+                  Welcome to OIE&apos;s brief annual summary of our Health, Safety, Environment, and Quality (HSEQ)
+                  performance for the year 2023.
+                </h4>
+                <div className='flex flex-col gap-4 mt-6 [&>p]:text-lg [&>p]:text-text [&>p>b]:text-xl [&>p>b]:font-extrabold'>
+                  <p>
+                    <b>Health:</b> Incident Rate: 3 incidents per 100 full-time employeesSick Days: 1.8% of total
+                    working days
+                  </p>
+                  <p>
+                    <b>Safety:</b> Total Recordable Incident Rate: 4.5 per 100 full-time employees. Safety Compliance
+                    Rate: 97%
+                  </p>
+                  <p>
+                    <b>Quality:</b> Customer Satisfaction: 92% satisfaction rateProject Delivery: 90% on-time and
+                    on-budget Highlights
+                  </p>
+                  <p>
+                    Obtained ISO 14001 Environmental Management Certification.Launched new safety training
+                    program.Completed the XYZ project ahead of schedule and under budget.As we move into 2024, we stay
+                    committed to excellence in health, safety, environmental sustainability, and quality in our
+                    construction projects. Thank you for your support.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className='gsap-year-trigger'>
+              <div className='pt-12 gsap-content-item'>
+                <h3 className='text-lg font-black text-subTitle'>2022</h3>
+                <h2 className='mt-4 text-[2rem] leading-snug font-extrabold text-xam'>
+                  OIE Construction Projects - HSEQ Yearly Snapshot 2022
+                </h2>
+                <p className='mt-2 text-lg text-text'>
+                  Lorem ipsum dolor sit amet consectetur. Amet rhoncus a morbi scelerisque sed praesent tempor.{' '}
+                </p>
+                <div className='mt-8 w-full h-[1px] bg-vien' />
+                <h4 className='mt-10 text-[2rem] leading-snug bg-clip-text font-extrabold text-xam'>
+                  Welcome to OIE&apos;s brief annual summary of our Health, Safety, Environment, and Quality (HSEQ)
+                  performance for the year 2023.
+                </h4>
+                <div className='flex flex-col gap-4 mt-6 [&>p]:text-lg [&>p]:text-text [&>p>b]:text-xl [&>p>b]:font-extrabold'>
+                  <p>
+                    <b>Health:</b> Incident Rate: 3 incidents per 100 full-time employeesSick Days: 1.8% of total
+                    working days
+                  </p>
+                  <p>
+                    <b>Safety:</b> Total Recordable Incident Rate: 4.5 per 100 full-time employees. Safety Compliance
+                    Rate: 97%
+                  </p>
+                  <p>
+                    <b>Quality:</b> Customer Satisfaction: 92% satisfaction rateProject Delivery: 90% on-time and
+                    on-budget Highlights
+                  </p>
+                  <p>
+                    <b>Health:</b> Incident Rate: 3 incidents per 100 full-time employeesSick Days: 1.8% of total
+                    working days
+                  </p>
+                  <p>
+                    <b>Safety:</b> Total Recordable Incident Rate: 4.5 per 100 full-time employees. Safety Compliance
+                    Rate: 97%
+                  </p>
+                  <p>
+                    <b>Quality:</b> Customer Satisfaction: 92% satisfaction rateProject Delivery: 90% on-time and
+                    on-budget Highlights
+                  </p>
+                  <p>
+                    Obtained ISO 14001 Environmental Management Certification.Launched new safety training
+                    program.Completed the XYZ project ahead of schedule and under budget.As we move into 2024, we stay
+                    committed to excellence in health, safety, environmental sustainability, and quality in our
+                    construction projects. Thank you for your support.
+                  </p>
+                </div>
+              </div>
+              <div className='pt-12 gsap-content-item'>
+                <h3 className='text-lg font-black text-subTitle'>2022</h3>
+                <h2 className='mt-4 text-[2rem] leading-snug font-extrabold text-xam'>
+                  OIE Construction Projects - HSEQ Yearly Snapshot 2022
+                </h2>
+                <p className='mt-2 text-lg text-text'>
+                  Lorem ipsum dolor sit amet consectetur. Amet rhoncus a morbi scelerisque sed praesent tempor.{' '}
+                </p>
+                <div className='mt-8 w-full h-[1px] bg-vien' />
+                <h4 className='mt-10 text-[2rem] leading-snug bg-clip-text font-extrabold text-xam'>
+                  Welcome to OIE&apos;s brief annual summary of our Health, Safety, Environment, and Quality (HSEQ)
+                  performance for the year 2023.
+                </h4>
+                <div className='flex flex-col gap-4 mt-6 [&>p]:text-lg [&>p]:text-text [&>p>b]:text-xl [&>p>b]:font-extrabold'>
+                  <p>
+                    <b>Health:</b> Incident Rate: 3 incidents per 100 full-time employeesSick Days: 1.8% of total
+                    working days
+                  </p>
+                  <p>
+                    <b>Safety:</b> Total Recordable Incident Rate: 4.5 per 100 full-time employees. Safety Compliance
+                    Rate: 97%
+                  </p>
+                  <p>
+                    <b>Quality:</b> Customer Satisfaction: 92% satisfaction rateProject Delivery: 90% on-time and
+                    on-budget Highlights
+                  </p>
+                  <p>
+                    <b>Health:</b> Incident Rate: 3 incidents per 100 full-time employeesSick Days: 1.8% of total
+                    working days
+                  </p>
+                  <p>
+                    <b>Safety:</b> Total Recordable Incident Rate: 4.5 per 100 full-time employees. Safety Compliance
+                    Rate: 97%
+                  </p>
+                  <p>
+                    <b>Quality:</b> Customer Satisfaction: 92% satisfaction rateProject Delivery: 90% on-time and
+                    on-budget Highlights
+                  </p>
+                  <p>
+                    Obtained ISO 14001 Environmental Management Certification.Launched new safety training
+                    program.Completed the XYZ project ahead of schedule and under budget.As we move into 2024, we stay
+                    committed to excellence in health, safety, environmental sustainability, and quality in our
+                    construction projects. Thank you for your support.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className='pt-12 gsap-content-item gsap-year-trigger'>
+              <h3 className='text-lg font-black text-subTitle'>2023</h3>
+              <h2 className='mt-4 text-[2rem] leading-snug font-extrabold text-xam'>
+                OIE Construction Projects - HSEQ Yearly Snapshot 2023
+              </h2>
+              <p className='mt-2 text-lg text-text'>
+                Lorem ipsum dolor sit amet consectetur. Amet rhoncus a morbi scelerisque sed praesent tempor.{' '}
+              </p>
+              <div className='mt-8 w-full h-[1px] bg-vien' />
+              <h4 className='mt-10 text-[2rem] leading-snug bg-clip-text font-extrabold text-xam'>
+                Welcome to OIE&apos;s brief annual summary of our Health, Safety, Environment, and Quality (HSEQ)
+                performance for the year 2023.
+              </h4>
+              <div className='flex flex-col gap-4 mt-6 [&>p]:text-lg [&>p]:text-text [&>p>b]:text-xl [&>p>b]:font-extrabold'>
+                <p>
+                  <b>Health:</b> Incident Rate: 3 incidents per 100 full-time employeesSick Days: 1.8% of total working
+                  days
+                </p>
+                <p>
+                  <b>Safety:</b> Total Recordable Incident Rate: 4.5 per 100 full-time employees. Safety Compliance
+                  Rate: 97%
+                </p>
+                <p>
+                  <b>Quality:</b> Customer Satisfaction: 92% satisfaction rateProject Delivery: 90% on-time and
+                  on-budget Highlights
+                </p>
+                <p>
+                  Obtained ISO 14001 Environmental Management Certification.Launched new safety training
+                  program.Completed the XYZ project ahead of schedule and under budget.As we move into 2024, we stay
+                  committed to excellence in health, safety, environmental sustainability, and quality in our
+                  construction projects. Thank you for your support.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </div>
+      <div className='w-full h-screen' />
+    </>
+  )
 }
